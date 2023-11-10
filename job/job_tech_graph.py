@@ -9,7 +9,7 @@ plt.rc('font', family='AppleGothic')
 
 # 1. data load
     # missing: sample 94개 중 position 89개, tech_stacks 75개
-with open('job/job.json', 'r') as f:
+with open('viz_repo/job/job.json', 'r') as f:
     job_data = json.load(f)
 
 
@@ -27,7 +27,7 @@ for job in job_data:
 # 3. Graph node, edge 지정
 Bipart = nx.Graph()
 
-position = ['시스템/네트워크', '서버/백엔드', '프론트엔드', '머신러닝']
+position = ['시스템/네트워크'] # for testing
 Bipart.add_nodes_from(position, bipartite=0) # 그룹 1: position
 Bipart.add_nodes_from(tech_stack, bipartite=1) # 그룹 2: tech_stack
 
@@ -61,7 +61,7 @@ for node, deg in nx.degree(proj):
     degree.append(deg)
 
 degree = sorted(list(set(degree)))
-degree_thresh = degree[2] # 0, min값인 노드는 제외
+degree_thresh = degree[0] # 차수 0인 노드는 제외 (최종 결과물_position 1개만 선택)
 max_degree = degree[-1]
 min_degree = degree[1]
 
@@ -70,7 +70,7 @@ high_degree_node = []
 
 for node, deg in nx.degree(proj):
     degree.append(deg)
-    if deg >= degree_thresh:
+    if deg > degree_thresh:
         high_degree_node.append(node)
 
         
@@ -97,7 +97,7 @@ nx.draw_networkx_labels(proj_subnet, pos=pos, font_size=17, font_color='black')
 nx.draw_networkx_edges(proj_subnet, pos=pos, edge_color='lightgrey')
 
 plt.title('포지션 별 연관 기술 스택', fontsize=30)
-plt.savefig('networkx_res/projected.png')
+plt.savefig('viz_repo/job/projected.png')
 # plt.show()
 
 
